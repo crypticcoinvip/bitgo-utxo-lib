@@ -792,8 +792,8 @@ Transaction.prototype.getOutputsHash = function (hashType, inIndex) {
  */
 Transaction.prototype.hashForZcashSignature = function (inIndex, prevOutScript, value, hashType) {
   typeforce(types.tuple(types.UInt32, types.Buffer, types.Satoshi, types.UInt32), arguments)
-  if (!coins.isZcash(this.network)) {
-    throw new Error('hashForZcashSignature can only be called when using Zcash network')
+  if (!coins.isZcash(this.network) || coins.isVerus(this.network)) {
+    throw new Error('hashForZcashSignature can only be called when using Zcash or Verus network')
   }
   if (this.joinsplits.length > 0) {
     throw new Error('Hash signature for Zcash protected transactions is not supported')
@@ -865,7 +865,22 @@ Transaction.prototype.hashForZcashSignature = function (inIndex, prevOutScript, 
 
     return this.getBlake2bHash(bufferWriter.getBuffer(), personalization)
   }
-  // TODO: support non overwinter transactions
+  else
+  {
+    return this.hashForSignature(inIndex, prevOutScript, value, hashType);
+  }
+}
+
+/**
+ * Hash transaction for signing a transparent transaction in Verus Coin. Protected transactions are not yet supported.
+ * @param inIndex
+ * @param prevOutScript
+ * @param value
+ * @param hashType
+ * @returns double SHA-256 or 256-bit BLAKE2b hash
+ */
+Transaction.prototype.hashForVerusSignature = function (inIndex, prevOutScript, value, hashType) {
+  return this.hashForZcashSignature(inIndex, prevOutScript, value, hashType);
 }
 
 Transaction.prototype.hashForWitnessV0 = function (inIndex, prevOutScript, value, hashType) {

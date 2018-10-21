@@ -7,6 +7,7 @@ const coins = {
   BTG: 'btg',
   LTC: 'ltc',
   ZEC: 'zec',
+  VRSC: 'vrsc',
   DASH: 'dash'
 }
 
@@ -28,6 +29,10 @@ coins.isLitecoin = function (network) {
 
 coins.isZcash = function (network) {
   return typeforce.value(coins.ZEC)(network.coin)
+}
+
+coins.isVerus = function (network) {
+  return typeforce.value(coins.VRSC)(network.coin)
 }
 
 coins.isValidCoin = typeforce.oneOf(
