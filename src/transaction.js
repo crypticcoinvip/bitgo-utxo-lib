@@ -792,7 +792,7 @@ Transaction.prototype.getOutputsHash = function (hashType, inIndex) {
  */
 Transaction.prototype.hashForZcashSignature = function (inIndex, prevOutScript, value, hashType) {
   typeforce(types.tuple(types.UInt32, types.Buffer, types.Satoshi, types.UInt32), arguments)
-  if (!coins.isZcash(this.network) || coins.isVerus(this.network)) {
+  if (!coins.isZcash(this.network)) {
     throw new Error('hashForZcashSignature can only be called when using Zcash or Verus network')
   }
   if (this.joinsplits.length > 0) {
