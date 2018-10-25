@@ -530,6 +530,8 @@ TransactionBuilder.prototype.setVersionGroupId = function (versionGroupId) {
 TransactionBuilder.prototype.setVersion = function (version) {
   typeforce(types.UInt32, version)
 
+  this.tx.version = version
+
   if (coins.isZcash(this.network)) {
     if (version >= 3)
     {
@@ -545,7 +547,6 @@ TransactionBuilder.prototype.setVersion = function (version) {
       this.tx.overwintered = 0;
     }
   }
-  this.tx.version = version
 }
 
 TransactionBuilder.prototype.setExpiryHeight = function (expiryHeight) {
