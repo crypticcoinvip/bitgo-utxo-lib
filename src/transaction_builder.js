@@ -686,7 +686,6 @@ TransactionBuilder.prototype.__addInputUnsafe = function (txHash, vout, options)
       pubKeys: [],
       signatures: [],
       signScript: options.scriptSig,
-      witness: Boolean(witness)  
     }
     this.inputs[vin] = input
     //throw new Error('coinbase inputs not supported')
