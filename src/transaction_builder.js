@@ -488,7 +488,7 @@ function buildInput (input, allowIncomplete) {
   }
 }
 
-// By default, assume is a bitcoin transaction
+// By default, assume is a Verus Coin transaction
 function TransactionBuilder (network, maximumFeeRate) {
   this.prevTxMap = {}
   this.network = network || networks.vrsc
@@ -662,11 +662,19 @@ TransactionBuilder.prototype.addInput = function (txHash, vout, sequence, prevOu
     txHash = txHash.getHash()
   }
 
-  return this.__addInputUnsafe(txHash, vout, {
-    sequence: sequence,
-    prevOutScript: prevOutScript,
-    value: value
-  })
+  if (Transaction.isCoinbaseHash(txHash)) {
+    return this.__addInputUnsafe(txHash, vout, {
+      sequence: sequence,
+      scriptSig: prevOutScript,
+    })
+  }
+  else {
+    return this.__addInputUnsafe(txHash, vout, {
+      sequence: sequence,
+      prevOutScript: prevOutScript,
+      value: value
+    })
+  }
 }
 
 TransactionBuilder.prototype.__addInputUnsafe = function (txHash, vout, options) {
@@ -674,7 +682,12 @@ TransactionBuilder.prototype.__addInputUnsafe = function (txHash, vout, options)
 
   if (Transaction.isCoinbaseHash(txHash)) {
     var vin = this.tx.addInput(txHash, vout, options.sequence, options.scriptSig)
-    input = {}
+    input = {
+      pubKeys: [],
+      signatures: [],
+      signScript: options.scriptSig,
+      witness: Boolean(witness)  
+    }
     this.inputs[vin] = input
     //throw new Error('coinbase inputs not supported')
     return 0;
