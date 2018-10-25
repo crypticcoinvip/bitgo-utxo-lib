@@ -28,7 +28,7 @@ coins.isLitecoin = function (network) {
 }
 
 coins.isZcash = function (network) {
-  return (typeforce.value(coins.ZEC)(network.coin)) || typeforce.value(coins.VRSC)(network.coin)
+  return !!network.isZcash
 }
 
 coins.isVerus = function (network) {

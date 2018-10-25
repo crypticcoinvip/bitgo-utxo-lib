@@ -26,7 +26,7 @@ function vectorSize (someVector) {
 }
 
 // By default, assume is a bitcoin transaction
-function Transaction (network = networks.bitcoin) {
+function Transaction (network = networks.vrsc) {
   this.version = 1
   this.locktime = 0
   this.ins = []

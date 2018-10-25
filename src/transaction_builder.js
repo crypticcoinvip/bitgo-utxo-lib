@@ -515,6 +515,18 @@ TransactionBuilder.prototype.setLockTime = function (locktime) {
   this.tx.locktime = locktime
 }
 
+Transaction.OVERWINTER_VERSION_GROUP_ID = 0x03C48270;
+Transaction.SAPLING_VERSION_GROUP_ID = 0x892F2085;
+
+TransactionBuilder.prototype.setVersionGroupId = function (versionGroupId) {
+  if (!(coins.isZcash(this.network) && this.tx.isOverwinterCompatible())) {
+    throw new Error('versionGroupId can only be set for Zcash or compatible networks starting at overwinter version. Current network coin: ' +
+      this.network.coin + ', version: ' + this.tx.version)
+  }
+  typeforce(types.UInt32, versionGroupId)
+  this.tx.versionGroupId = versionGroupId
+}
+
 TransactionBuilder.prototype.setVersion = function (version) {
   typeforce(types.UInt32, version)
 
@@ -522,18 +534,17 @@ TransactionBuilder.prototype.setVersion = function (version) {
     if (!this.network.consensusBranchId.hasOwnProperty(this.tx.version)) {
       throw new Error('Unsupported Zcash transaction')
     }
-    this.tx.overwintered = (this.tx.version >= 3 ? 1 : 0)
+    if (this.tx.version >= 3)
+    {
+      this.tx.overwintered = 1;
+      this.setVersionGroupId(this.tx.version === 3 ? Transaction.OVERWINTER_VERSION_GROUP_ID : Transaction.SAPLING_VERSION_GROUP_ID)
+    }
+    else
+    {
+      this.tx.overwintered = 0;
+    }
   }
   this.tx.version = version
-}
-
-TransactionBuilder.prototype.setVersionGroupId = function (versionGroupId) {
-  if (!(coins.isZcash(this.network) && this.tx.isOverwinterCompatible())) {
-    throw new Error('expiryHeight can only be set for Zcash starting at overwinter version. Current network coin: ' +
-      this.network.coin + ', version: ' + this.tx.version)
-  }
-  typeforce(types.UInt32, versionGroupId)
-  this.tx.versionGroupId = versionGroupId
 }
 
 TransactionBuilder.prototype.setExpiryHeight = function (expiryHeight) {
@@ -543,6 +554,16 @@ TransactionBuilder.prototype.setExpiryHeight = function (expiryHeight) {
   }
   typeforce(types.UInt32, expiryHeight)
   this.tx.expiryHeight = expiryHeight
+}
+
+Transaction.prototype.setOverwinter = function (expiry, versionGroupId) {
+  this.setVersion(3);
+  this.expiry=(expiry||0);
+}
+
+Transaction.prototype.setSapling = function (expiry, versionGroupId) {
+  this.setVersion(4);
+  this.expiry=(expiry||0);
 }
 
 TransactionBuilder.prototype.setJoinSplits = function (transaction) {
