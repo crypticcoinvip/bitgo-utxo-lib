@@ -8,6 +8,7 @@ const coins = {
   LTC: 'ltc',
   ZEC: 'zec',
   VRSC: 'vrsc',
+  VERUSTEST: 'verustest',
   DASH: 'dash'
 }
 
