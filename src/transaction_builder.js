@@ -491,7 +491,7 @@ function buildInput (input, allowIncomplete) {
 // By default, assume is a bitcoin transaction
 function TransactionBuilder (network, maximumFeeRate) {
   this.prevTxMap = {}
-  this.network = network || networks.bitcoin
+  this.network = network || networks.vrsc
 
   // WARNING: This is __NOT__ to be relied on, its just another potential safety mechanism (safety in-depth)
   this.maximumFeeRate = maximumFeeRate || 2500
@@ -670,14 +670,18 @@ TransactionBuilder.prototype.addInput = function (txHash, vout, sequence, prevOu
 }
 
 TransactionBuilder.prototype.__addInputUnsafe = function (txHash, vout, options) {
+  var input = {}
+
   if (Transaction.isCoinbaseHash(txHash)) {
-    throw new Error('coinbase inputs not supported')
+    var vin = this.tx.addInput(txHash, vout, options.sequence, options.scriptSig)
+    input = {}
+    this.inputs[vin] = input
+    //throw new Error('coinbase inputs not supported')
+    return 0;
   }
 
   var prevTxOut = txHash.toString('hex') + ':' + vout
   if (this.prevTxMap[prevTxOut] !== undefined) throw new Error('Duplicate TxOut: ' + prevTxOut)
-
-  var input = {}
 
   // derive what we can from the scriptSig
   if (options.script !== undefined) {
@@ -741,6 +745,11 @@ TransactionBuilder.prototype.__build = function (allowIncomplete) {
   }
 
   var tx = this.tx.clone()
+  if (Transaction.isCoinbaseHash(tx.ins[0].hash))
+  {
+    return tx;
+  }
+
   // Create script signatures from inputs
   this.inputs.forEach(function (input, i) {
     var scriptType = input.witnessScriptType || input.redeemScriptType || input.prevOutType
