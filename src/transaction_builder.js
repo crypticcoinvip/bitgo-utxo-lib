@@ -531,13 +531,14 @@ TransactionBuilder.prototype.setVersion = function (version) {
   typeforce(types.UInt32, version)
 
   if (coins.isZcash(this.network)) {
-    if (!this.network.consensusBranchId.hasOwnProperty(this.tx.version)) {
-      throw new Error('Unsupported Zcash transaction')
-    }
-    if (this.tx.version >= 3)
+    if (version >= 3)
     {
+      if (version > Transaction.ZCASH_SAPLING_VERSION)
+      {
+        throw new Error('Unsupported Zcash transaction')
+      }
       this.tx.overwintered = 1;
-      this.setVersionGroupId(this.tx.version === 3 ? Transaction.OVERWINTER_VERSION_GROUP_ID : Transaction.SAPLING_VERSION_GROUP_ID)
+      this.setVersionGroupId(version === 3 ? Transaction.OVERWINTER_VERSION_GROUP_ID : Transaction.SAPLING_VERSION_GROUP_ID)
     }
     else
     {
