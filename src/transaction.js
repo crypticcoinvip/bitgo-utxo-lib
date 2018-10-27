@@ -867,7 +867,7 @@ Transaction.prototype.hashForZcashSignature = function (inIndex, prevOutScript, 
   }
   else
   {
-    return this.hashForSignature(inIndex, prevOutScript, value, hashType);
+    return this.hashForSignature(inIndex, prevOutScript, hashType);
   }
 }
 
