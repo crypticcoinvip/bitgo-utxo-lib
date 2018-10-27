@@ -181,7 +181,7 @@ function fixMultisigOrder (input, transaction, vin, value, network) {
   if (input.redeemScriptType !== scriptTypes.MULTISIG || !input.redeemScript) return
   if (input.pubKeys.length === input.signatures.length) return
 
-  network = network || networks.bitcoin
+  network = network || networks.vrsc
   var unmatched = input.signatures.concat()
 
   input.signatures = input.pubKeys.map(function (pubKey) {
@@ -597,7 +597,7 @@ TransactionBuilder.prototype.setJoinSplits = function (transaction) {
 }
 
 TransactionBuilder.fromTransaction = function (transaction, network) {
-  var txbNetwork = network || networks.bitcoin
+  var txbNetwork = network || networks.vrsc
   var txb = new TransactionBuilder(txbNetwork)
 
   if (txb.network.coin !== transaction.network.coin) {
