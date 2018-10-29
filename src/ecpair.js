@@ -69,11 +69,12 @@ ECPair.fromWIF = function (string, network) {
 
     if (!network) throw new Error('Unknown network version')
 
-  // otherwise, assume a network object (or default to vrsc)
+  // otherwise, assume a network object (or default to vrsc style network)
   } else {
-    network = network || NETWORKS.vrsc
-
-    if (version !== network.wif) throw new Error('Invalid network version')
+    network = network || NETWORKS.default
+    console.log('Network WIF: ' + network.wif + ', Version: ' + version)
+    //if (version !== network.wif) throw new Error('Invalid network version')
+    if (version !== network.wif) console.log('Warning: current network version does not match wif key version')
   }
 
   var d = BigInteger.fromBuffer(decoded.privateKey)

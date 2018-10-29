@@ -25,8 +25,8 @@ function vectorSize (someVector) {
   }, 0)
 }
 
-// By default, assume is a bitcoin transaction
-function Transaction (network = networks.vrsc) {
+// By default, assume is a verus transaction
+function Transaction (network = networks.default) {
   this.version = 1
   this.locktime = 0
   this.ins = []
@@ -79,7 +79,7 @@ Transaction.ZCASH_NOTECIPHERTEXT_SIZE = 1 + 8 + 32 + 32 + 512 + 16
 Transaction.ZCASH_G1_PREFIX_MASK = 0x02
 Transaction.ZCASH_G2_PREFIX_MASK = 0x0a
 
-Transaction.fromBuffer = function (buffer, network = networks.vrsc, __noStrict) {
+Transaction.fromBuffer = function (buffer, network = networks.default, __noStrict) {
   var offset = 0
   function readSlice (n) {
     offset += n
@@ -248,6 +248,10 @@ Transaction.fromBuffer = function (buffer, network = networks.vrsc, __noStrict) 
   }
   var tx = new Transaction(network)
   tx.version = readInt32()
+
+  console.log('NETWORK')
+  console.log(network)
+  //console.log('version: ' +  tx.version + ', offset:' + offset)
 
   if (coins.isZcash(network)) {
     // Split the header into fOverwintered and nVersion
@@ -791,18 +795,21 @@ Transaction.prototype.getOutputsHash = function (hashType, inIndex) {
  * @returns double SHA-256 or 256-bit BLAKE2b hash
  */
 Transaction.prototype.hashForZcashSignature = function (inIndex, prevOutScript, value, hashType) {
+  console.log('Hash for zcash signature initialized')
+  
   typeforce(types.tuple(types.UInt32, types.Buffer, types.Satoshi, types.UInt32), arguments)
+  console.log('Typeforce completed')
   if (!coins.isZcash(this.network)) {
     throw new Error('hashForZcashSignature can only be called when using Zcash or Verus network')
   }
   if (this.joinsplits.length > 0) {
     throw new Error('Hash signature for Zcash protected transactions is not supported')
   }
-
   if (inIndex >= this.ins.length && inIndex !== VALUE_UINT64_MAX) {
     throw new Error('Input index is out of range')
   }
 
+  console.log('checking overwinter compatibility')
   if (this.isOverwinterCompatible()) {
     var hashPrevouts = this.getPrevoutHash(hashType)
     var hashSequence = this.getSequenceHash(hashType)
@@ -810,6 +817,7 @@ Transaction.prototype.hashForZcashSignature = function (inIndex, prevOutScript, 
     var hashJoinSplits = ZERO
     var hashShieldedSpends = ZERO
     var hashShieldedOutputs = ZERO
+    console.log('hashes evaluated')
 
     var bufferWriter
     var baseBufferSize = 0
@@ -867,6 +875,7 @@ Transaction.prototype.hashForZcashSignature = function (inIndex, prevOutScript, 
   }
   else
   {
+    console.log('not overwinter compatible')
     return this.hashForSignature(inIndex, prevOutScript, hashType);
   }
 }

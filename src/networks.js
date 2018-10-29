@@ -3,6 +3,25 @@
 var coins = require('./coins')
 
 module.exports = {
+  default: {
+    messagePrefix: '\x18Default Signed Message:\n',
+    bech32: 'bc',
+    bip32: {
+      public: 0x0488b21e,
+      private: 0x0488ade4
+    },
+    pubKeyHash: 0x3c,
+    scriptHash: 0x55,
+    wif: 0xBC,
+    consensusBranchId: {
+      1: 0x00,
+      2: 0x00,
+      3: 0x5ba81b19,
+      4: 0x76b809bb
+    },
+    coin: coins.DEFAULT,
+    isZcash: true
+  },
   dash: {
     messagePrefix: '\x19DarkCoin Signed Message:\n',
     bip32: {
@@ -25,7 +44,7 @@ module.exports = {
     wif: 0xef, // https://github.com/dashpay/godashutil/blob/master/wif.go#L72
     coin: coins.DASH
   },
-  bitcoincash: {
+  bch: {
     messagePrefix: '\x18Bitcoin Signed Message:\n',
     bech32: 'bc',
     bip32: {
@@ -50,7 +69,7 @@ module.exports = {
     wif: 0xef,
     coin: coins.BCH
   },
-  zcash: {
+  zec: {
     messagePrefix: '\x18ZCash Signed Message:\n',
     bech32: 'bc',
     bip32: {
@@ -97,9 +116,9 @@ module.exports = {
       public: 0x0488b21e,
       private: 0x0488ade4
     },
-    pubKeyHash: 0x1cb8,
-    scriptHash: 0x1cbd,
-    wif: 0x80,
+    pubKeyHash: 0x3c,
+    scriptHash: 0x55,
+    wif: 0xBC,
     consensusBranchId: {
       1: 0x00,
       2: 0x00,
@@ -109,26 +128,7 @@ module.exports = {
     coin: coins.VRSC,
     isZcash: true
   },
-  verustest: {
-    messagePrefix: '\x18VerusTest Signed Message:\n',
-    bech32: 'bc',
-    bip32: {
-      public: 0x0488b21e,
-      private: 0x0488ade4
-    },
-    pubKeyHash: 0x1cb8,
-    scriptHash: 0x1cbd,
-    wif: 0x80,
-    consensusBranchId: {
-      1: 0x00,
-      2: 0x00,
-      3: 0x5ba81b19,
-      4: 0x76b809bb
-    },
-    coin: coins.VERUSTEST,
-    isZcash: true
-  },
-  bitcoingold: {
+  btg: {
     messagePrefix: '\x18Bitcoin Gold Signed Message:\n',
     bech32: 'btg',
     bip32: {
@@ -141,7 +141,7 @@ module.exports = {
     coin: coins.BTG,
     forkId: 0x4F /* 79 */
   },
-  bitcoin: {
+  btc: {
     messagePrefix: '\x18Bitcoin Signed Message:\n',
     bech32: 'bc',
     bip32: {
@@ -165,7 +165,7 @@ module.exports = {
     wif: 0xef,
     coin: coins.BTC
   },
-  litecoin: {
+  ltc: {
     messagePrefix: '\x19Litecoin Signed Message:\n',
     bip32: {
       public: 0x019da462,

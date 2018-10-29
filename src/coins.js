@@ -9,7 +9,8 @@ const coins = {
   ZEC: 'zec',
   VRSC: 'vrsc',
   VERUSTEST: 'verustest',
-  DASH: 'dash'
+  DASH: 'dash',
+  DEFAULT: 'default'
 }
 
 coins.isBitcoin = function (network) {
