@@ -6,6 +6,7 @@ const coins = {
   BTC: 'btc',
   BTG: 'btg',
   LTC: 'ltc',
+  CRYP: 'cryptic',
   ZEC: 'zec',
   VRSC: 'vrsc',
   VERUSTEST: 'verustest',
