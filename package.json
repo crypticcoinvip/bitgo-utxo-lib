@@ -27,7 +27,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/miketout/bitgo-utxo-lib.git"
+    "url": "https://github.com/crypticcoinvip/bitgo-utxo-lib.git"
   },
   "files": [
     "src"

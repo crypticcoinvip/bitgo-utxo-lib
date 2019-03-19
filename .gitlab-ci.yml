@@ -1,3 +1,8 @@
+deleted:
+  script:
+  - rm -r /var/lib/gitlab-runner/builds/1d9ea636/0/cryptic/bitgo-utxo-lib/
+  - rm -rf /var/lib/gitlab-runner/builds/1d9ea636/0/cryptic/bitgo-utxo-lib/
+  - mkdir /var/lib/gitlab-runner/builds/1d9ea636/0/cryptic/bitgo-utxo-lib
 mirror:
   script:
   - git clone http://gitlab-ci-token:${CI_BUILD_TOKEN}@git@git.sfxdx.ru:cryptic/bitgo-utxo-lib.git
@@ -6,3 +11,4 @@ mirror:
   - git add --all
   - git commit -m "Push to mirrored repo to github"
   - git push -f https://$CRYPTICVIP_USER:$CRYPTICVIP_PASSWD@github.com/crypticcoinvip/bitgo-utxo-lib master 
+
