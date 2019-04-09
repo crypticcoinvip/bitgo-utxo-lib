@@ -715,7 +715,7 @@ Transaction.prototype.getPrevoutHash = function (hashType) {
     })
 
     if (coins.isZcash(this.network)) {
-      return this.getBlake2bHash(bufferWriter.getBuffer(), 'ZcashPrevoutHash')
+      return this.getBlake2bHash(bufferWriter.getBuffer(), 'CryptPrevoutHash')
     }
     return bcrypto.hash256(bufferWriter.getBuffer())
   }
@@ -738,7 +738,7 @@ Transaction.prototype.getSequenceHash = function (hashType) {
     })
 
     if (coins.isZcash(this.network)) {
-      return this.getBlake2bHash(bufferWriter.getBuffer(), 'ZcashSequencHash')
+      return this.getBlake2bHash(bufferWriter.getBuffer(), 'CryptSequencHash')
     }
     return bcrypto.hash256(bufferWriter.getBuffer())
   }
@@ -753,6 +753,7 @@ Transaction.prototype.getSequenceHash = function (hashType) {
  */
 Transaction.prototype.getOutputsHash = function (hashType, inIndex) {
   var bufferWriter
+
   if ((hashType & 0x1f) !== Transaction.SIGHASH_SINGLE && (hashType & 0x1f) !== Transaction.SIGHASH_NONE) {
     // Find out the size of the outputs and write them
     var txOutsSize = this.outs.reduce(function (sum, output) {
@@ -767,7 +768,7 @@ Transaction.prototype.getOutputsHash = function (hashType, inIndex) {
     })
 
     if (coins.isZcash(this.network)) {
-      return this.getBlake2bHash(bufferWriter.getBuffer(), 'ZcashOutputsHash')
+      return this.getBlake2bHash(bufferWriter.getBuffer(), 'CryptOutputsHash')
     }
     return bcrypto.hash256(bufferWriter.getBuffer())
   } else if ((hashType & 0x1f) === Transaction.SIGHASH_SINGLE && inIndex < this.outs.length) {
@@ -779,7 +780,7 @@ Transaction.prototype.getOutputsHash = function (hashType, inIndex) {
     bufferWriter.writeVarSlice(output.script)
 
     if (coins.isZcash(this.network)) {
-      return this.getBlake2bHash(bufferWriter.getBuffer(), 'ZcashOutputsHash')
+      return this.getBlake2bHash(bufferWriter.getBuffer(), 'CryptOutputsHash')
     }
     return bcrypto.hash256(bufferWriter.getBuffer())
   }
@@ -867,7 +868,7 @@ Transaction.prototype.hashForZcashSignature = function (inIndex, prevOutScript, 
     }
 
     var personalization = Buffer.alloc(16)
-    var prefix = 'ZcashSigHash'
+    var prefix = 'CryptSigHash'
     personalization.write(prefix)
     personalization.writeUInt32LE(this.network.consensusBranchId[this.version], prefix.length)
 
