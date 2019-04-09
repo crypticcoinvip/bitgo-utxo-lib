@@ -11,7 +11,7 @@ Originally a fork of [bitcoinjs-lib](https://github.com/BitGo/bitcoinjs-lib); we
 - Bitcoin
 - Bitcoin Cash
 - Bitcoin Gold
-- Zcash (Overwinter support in mainnet and Sapling in testnet)
+- Crypticcoin (MN_Sapling only)
 - Dash
 
 ## Features
@@ -91,6 +91,46 @@ import { HDNode, Transaction } from 'bitgo-utxo-lib'
 For VSCode (and other editors), users are advised to install the type declarations, as Intellisense uses that information to help you code (autocompletion, static analysis).
 
 ## Examples
+Crypticcoin transaction building example:
+``` javascript
+let bitcoin = require('bitgo-utxo-lib')
+var bigi = require('bigi')
+
+const key = '6cde7db726ec0b1b87c4d9ff834713117aae20a120abfbe86930de409eae68d4'
+var hash = bitcoin.crypto.sha256(key)
+var d = bigi.fromBuffer(hash)
+var keyPair = new bitcoin.ECPair(d, null, { network: bitcoin.networks.cryptic })
+
+// var pubKey = keyPair.getPublicKeyBuffer()
+
+console.log('getAddress::', keyPair.getAddress())
+
+var txb = new bitcoin.TransactionBuilder(bitcoin.networks.cryptic)
+
+txb.debug = true
+
+// Set the Sapling version
+txb.setVersion(4)
+txb.overwintered = true;
+txb.setVersionGroupId(parseInt('0x892F2085', 16));
+
+// txb.setExpiryHeight(132003); // You can specify the highest block number where transaction can be included
+
+txb.setLockTime(0); // 0 means "not time-locked"
+
+txb.addInput('b119ee96bfc593dc1890124bba5523f16919ab2842187540b7bc8aadda946b6d', 0) // txid + output index. UTXO, which is used as first input
+txb.addOutput('c1gMM1z8b4QmtJycvt2xeY1ts2LNgzdF8dN', 499999000) // CRYP address + amount to send
+
+const inputValueToSign = 500000000; // amount of UTXO, which is used as first input
+
+// Sign the first input. Call it for every input
+txb.sign(0, keyPair, '', bitcoin.Transaction.SIGHASH_SINGLE, inputValueToSign)
+
+const txSerial = txb.build().toHex()
+
+console.log(txSerial)
+```
+
 The below examples are implemented as integration tests, they should be very easy to understand.
 Otherwise, pull requests are appreciated.
 Some examples interact (via HTTPS) with a 3rd Party Blockchain Provider (3PBP).
